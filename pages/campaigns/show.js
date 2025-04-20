@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Layout } from "../../components/Layout";
 import { campaignContract } from "../../ethereum/campaign";
-import { Card, Message } from "semantic-ui-react";
+import { Card, Grid, GridColumn, Message } from "semantic-ui-react";
 import web3 from "../../ethereum/web3";
+import ContributeForm from "../../components/ContributeForm";
 
 
 function getDaysRemaining(deadline) {
@@ -17,7 +18,6 @@ function getDaysRemaining(deadline) {
   const days = Math.floor(diff / (1000 * 60 * 60 * 24));
   return `${days} day${days !== 1 ? 's' : ''}`;
 }
-
 
 export default function CampaignShow({ address }) {
   const [summary, setSummary] = useState({})
@@ -133,7 +133,14 @@ export default function CampaignShow({ address }) {
         </div>
       </div>
       <hr/>
-      {summary && renderCards()}
+      <Grid>
+        <GridColumn width={10}>
+          {summary && renderCards()}
+        </GridColumn>
+        <GridColumn width={6}>
+          <ContributeForm address={address}/>
+        </GridColumn>
+      </Grid>
     </Layout>
   );
 }

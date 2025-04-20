@@ -12,13 +12,11 @@ export default function NewCampaign() {
   const [deadline, setDeadline] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [success, setSuccess] = useState(false)
 
   async function onSubmit(e) {
     e.preventDefault();
     setLoading(true)
     setError('')
-    setSuccess(false)
 
     try {
       const accounts = await web3.eth.getAccounts()
@@ -41,7 +39,7 @@ export default function NewCampaign() {
     <Layout>
       <h3>Create Campaign</h3>
       <hr/>
-      <Form onSubmit={onSubmit} error={!!error} success={success}>
+      <Form onSubmit={onSubmit} error={!!error}>
       { loading && <Loading/> }
       <FormField>
         <label>Minimum Contribution</label>
@@ -67,7 +65,6 @@ export default function NewCampaign() {
           onChange={(event) => setDeadline(event.target.value)}
         />
       </FormField>
-      <Message success header='Well Done!!' content='Your campaign was successfully created.'></Message>
       <Message error header='Ops' content={error}></Message>
       <Button type='submit'>Submit</Button>
       </Form>
