@@ -6,7 +6,7 @@ dotenv.config()
 
 const { bytecode, interface: abi } = compiledFactory;
 const mnemonic = process.env.MNEMONIC
-const providerOrUrl = process.env.INFURA_API_KEY
+const providerOrUrl = process.env.INFURA_API_URL
 const privateKey = process.env.ACCOUNT_PRIVATE_KEY
 const privateKeys = [privateKey]
 

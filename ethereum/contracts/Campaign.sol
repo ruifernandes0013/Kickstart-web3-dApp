@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.4.17;
+
 contract CampaignFactory {
   address[] public deployedCampaigns;
 
@@ -20,8 +21,9 @@ contract CampaignFactory {
 }
 
 contract Campaign {
-  
+
     address public manager;
+
     struct Request {
       string description;
       address recipient;
@@ -89,6 +91,24 @@ contract Campaign {
 
     function getRequestCount() public view returns (uint) {
       return currentIndexRequest;
+    }
+
+    function getSummary() public view returns (
+      uint, uint, uint, uint, uint, bool, bool, uint, address
+    ) {
+      uint balance = address(this).balance;
+      uint requestsCount = currentIndexRequest;
+      return (
+        balance,
+        contributorsCount,
+        minimumContribution,
+        goalAmount,
+        deadline,
+        isCanceled,
+        goalReached,
+        requestsCount,
+        manager
+      );
     }
 
     //restricted functions
