@@ -15,7 +15,7 @@ export default function Home() {
           header: c,
           meta: (
             <Routes.Link route={`/campaigns/${c}`}>
-              <a>View campaign</a>
+              View campaign
             </Routes.Link>
           ),
           style: { wordWrap: 'break-word' }
@@ -25,22 +25,20 @@ export default function Home() {
     }
 
     fecthCampaigns()  
-  }, [campaigns])
+  }, [])
 
   return (
     <Layout>
       <h3>Open Campaigns</h3>
       <hr/>
       <Routes.Link route='/campaigns/new'>
-        <a className='item'>
-          <Button 
-            floated='right' 
-            primary 
-            content='Create Campaign' 
-            icon='add circle' 
-            labelPosition='right' 
-          />
-        </a>
+        <Button 
+          floated='right' 
+          primary 
+          content='Create Campaign' 
+          icon='add circle' 
+          labelPosition='right' 
+        />
       </Routes.Link>
       <CardGroup items={campaigns} />
     </Layout>

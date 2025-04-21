@@ -4,7 +4,7 @@ import compiledFactory from '../ethereum/build/CampaignFactory.json' with { type
 import dotenv from 'dotenv'
 dotenv.config()
 
-const { bytecode, interface: abi } = compiledFactory;
+const { evm: { bytecode: { object } }  , abi } = compiledFactory;
 const mnemonic = process.env.MNEMONIC
 const providerOrUrl = process.env.INFURA_API_URL
 const privateKey = process.env.ACCOUNT_PRIVATE_KEY
@@ -28,8 +28,8 @@ const deploy = async () => {
     const balance = await web3.eth.getBalance(providerAccount);
     console.log("Account balance:", web3.utils.fromWei(balance, 'ether'), "ETH");
 
-    const result = await new web3.eth.Contract(JSON.parse(abi))
-      .deploy({ data: bytecode })
+    const result = await new web3.eth.Contract(abi)
+      .deploy({ data: object })
       .send({ gas: 2000000, from: providerAccount })
       .on('transactionHash', (hash) => { console.log("Transaction hash:", hash); })
       .on('error', (error) => { console.error("Error during deployment:", error) });

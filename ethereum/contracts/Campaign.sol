@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.4.17;
+pragma solidity ^0.8.9;
 
 contract CampaignFactory {
   address[] public deployedCampaigns;
@@ -82,7 +82,7 @@ contract Campaign {
       require(amount > 0, "You have no funds to refund");
 
       contributors[msg.sender] = 0;
-      msg.sender.transfer(amount);
+      payable(msg.sender).transfer(amount);
     }
 
     function getBalance() public restricted view returns (uint) {
@@ -129,7 +129,7 @@ contract Campaign {
         require(request.approvalCount > (contributorsCount / 2));
         require(!request.complete);
 
-        request.recipient.transfer(request.value);
+        payable(request.recipient).transfer(request.value);
         request.complete = true;
     }
 

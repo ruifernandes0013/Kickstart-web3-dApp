@@ -14,21 +14,20 @@ let campaign
 
 beforeEach(async() => {
   accounts = await web3.eth.getAccounts()
-  factory = await new web3.eth.Contract(JSON.parse(compiledFactory.interface))
-    .deploy({ data: compiledFactory.bytecode })
-    .send({ from: accounts[0], gas: '1000000' })
+  factory = await new web3.eth.Contract(compiledFactory.abi)
+    .deploy({ data: compiledFactory.evm.bytecode.object })
+    .send({ from: accounts[0], gas: '2400000' })
 
   await factory.methods.createCampaign(
     web3.utils.toWei('0.01', 'ether'),  // minimumContribution
     web3.utils.toWei('1', 'ether'),     // goal
     '30'                                // durationInDays
-  )
-    .send({ from: accounts[0], gas: '1000000' });
+  ).send({ from: accounts[0], gas: '2400000' });
 
   [ campaignAddress ] = await factory.methods.getDeployedCampaigns().call()
-
+  
   campaign = new web3.eth.Contract(
-    JSON.parse(compiledCampaign.interface),
+    compiledCampaign.abi,
     campaignAddress
   )
 })
@@ -82,7 +81,7 @@ describe("Campaigns", () => {
       'Buy batteries',
       web3.utils.toWei('0.10', 'ether'),
       accounts[1]
-    ).send({ from: accounts[0], gas: 1000000 });
+    ).send({ from: accounts[0], gas: 1400000 });
 
     const request = await campaign.methods.requests(0).call()
     assert('Buy batteries', request.description)
@@ -104,24 +103,24 @@ describe("Campaigns", () => {
     await campaign.methods.contribute().send({
       from: accounts[1],
       value: web3.utils.toWei('1', 'ether'),  
-      gas: "1000000" 
+      gas: "1400000" 
     });
 
     //the manager creates a spending request
     await campaign.methods
       .createRequest('Buy batteries', web3.utils.toWei('0.01', 'ether'), accounts[1])
-      .send({ from: accounts[0], gas: "1000000" });
+      .send({ from: accounts[0], gas: "1400000" });
 
     //an investor approves
     await campaign.methods.approveRequest(0).send({
       from: accounts[1],
-      gas: "1000000"
+      gas: "1400000"
     });
 
     // the manager tries to finalize the spending request
     await campaign.methods.finalizeRequest(0).send({
       from: accounts[0],
-      gas: "1000000",
+      gas: "1400000",
     });
     const request = await campaign.methods.requests(0).call()
     

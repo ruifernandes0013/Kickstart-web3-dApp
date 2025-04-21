@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Layout } from "../../components/Layout";
 import { campaignContract } from "../../ethereum/campaign";
-import { Card, Grid, GridColumn, Message } from "semantic-ui-react";
+import { Button, Card, Grid, GridColumn, Message } from "semantic-ui-react";
 import web3 from "../../ethereum/web3";
 import ContributeForm from "../../components/ContributeForm";
-
+import routes from "../../routes";
 
 function getDaysRemaining(deadline) {
   if (!deadline) return 'Invalid date';
@@ -40,7 +40,7 @@ export default function CampaignShow({ address }) {
       })
     }
     getSummary()
-  }, [address]);
+  }, []);
 
   function renderCards() {
     const {
@@ -99,39 +99,44 @@ export default function CampaignShow({ address }) {
   return (
     <Layout>
       <h1>Campaign: {address}</h1>
-      <div
+      { 
+        Object.keys(summary).length
+        ?  
+        <div
         style={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
           width: '100%',
         }}
-      >
-        <div style={{ display: 'flex', gap: '10px' }}>
-          <div>
-            <Message
-              compact
-              success={!summary?.isCanceled}
-              error={summary?.isCanceled}
-              content={summary?.isCanceled ? 'Canceled' : 'Active'}
-            />
+        >
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <div>
+              <Message
+                compact
+                success={!summary?.isCanceled}
+                error={summary?.isCanceled}
+                content={summary?.isCanceled ? 'Canceled' : 'Active'}
+              />
+            </div>
+            <div>
+              <Message
+                compact
+                success={summary?.goalReached}
+                error={!summary?.goalReached}
+                content={summary?.goalReached ? 'Goal Reached' : 'Goal Not Reached Yet'}
+              />
+            </div>
           </div>
-          <div>
+          <div style={{ flexGrow: 1, textAlign: 'right' }}>
             <Message
               compact
-              success={summary?.goalReached}
-              error={!summary?.goalReached}
-              content={summary?.goalReached ? 'Goal Reached' : 'Goal Not Reached Yet'}
+              content={`Campaign Deadline in ${getDaysRemaining(summary?.deadline)}`}
             />
           </div>
         </div>
-        <div style={{ flexGrow: 1, textAlign: 'right' }}>
-          <Message
-            compact
-            content={`Campaign Deadline in ${getDaysRemaining(summary?.deadline)}`}
-          />
-        </div>
-      </div>
+        : <></>
+      }
       <hr/>
       <Grid>
         <GridColumn width={10}>
@@ -141,6 +146,14 @@ export default function CampaignShow({ address }) {
           <ContributeForm address={address}/>
         </GridColumn>
       </Grid>
+      <Button 
+        primary 
+        style={{ marginTop: 10 }}
+        onClick={() => 
+          routes.Router.pushRoute(`/campaigns/${address}/requests/`)
+      }>
+        View Requests
+      </Button>
     </Layout>
   );
 }
